@@ -1,0 +1,3 @@
+[submodule "cargo-tracker"]
+	path = cargo-tracker
+	url = https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker
