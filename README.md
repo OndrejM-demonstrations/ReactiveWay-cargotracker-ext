@@ -11,3 +11,14 @@ The project consistes of 2 repositories:
 # Instructions for the hands on lab
 
 See the instructions to download the recommended tools and setup your environment in this [README](workshop-dependencies/README.adoc) file.
+
+## Improve the monolithic application
+
+In the first part, we will improve the monolithic application. The steps are described in the [ReactiveWay-cargotracker](https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker/blob/devoxx-uk-2017/README.adoc) repository.
+
+## Introduce a microservice
+In the second part, we will separate a module of the monolith into a sandalone microservice, running with Payara Micro.
+
+## Deploying microservices
+
+In the third part, we will deploy the monolith and the microservice into connected docker containers, implement some microservice patterns and deploy to the Jelastic cloud.
