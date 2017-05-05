@@ -11,5 +11,6 @@
 
     <modules>
 	<module>cargo-tracker</module>
-  </modules>
+        <module>workshop-dependencies</module>
+    </modules>
 </project>
