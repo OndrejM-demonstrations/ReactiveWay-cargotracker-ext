@@ -11,5 +11,7 @@
 
     <modules>
 	<module>cargo-tracker</module>
-  </modules>
+        <module>pathfinder</module>
+        <module>pathfinder-api</module>
+    </modules>
 </project>
