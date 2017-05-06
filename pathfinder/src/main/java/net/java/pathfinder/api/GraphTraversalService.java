@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.GenericEntity;
 import net.java.pathfinder.api.reactive.GraphTraversalRequest;
 import net.java.pathfinder.api.reactive.GraphTraversalResponse;
 import net.java.pathfinder.internal.GraphDao;
@@ -46,11 +47,10 @@ public class GraphTraversalService {
             @QueryParam("deadline") String deadline) throws InterruptedException {
 
         List<TransitPath> candidates = new ArrayList<>();
-        Throwable[] exceptionHolder = new Throwable[1];
 
         findShortestPath(originUnLocode, destinationUnLocode,
                 candidates::add,
-                () -> response.resume(candidates),
+                () -> response.resume(new GenericEntity<List<TransitPath>>(candidates){}),
                 e -> response.resume(e));
     }
     
