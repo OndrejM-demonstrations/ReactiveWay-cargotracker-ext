@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class TransitPath implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private List<TransitEdge> transitEdges;
 
     public TransitPath() {

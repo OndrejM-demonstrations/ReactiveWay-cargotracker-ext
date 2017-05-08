@@ -9,6 +9,8 @@ import java.util.Date;
  */
 public class TransitEdge implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private String voyageNumber;
     private String fromUnLocode;
     private String toUnLocode;
