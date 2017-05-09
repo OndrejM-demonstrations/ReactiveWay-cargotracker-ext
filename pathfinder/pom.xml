@@ -19,12 +19,22 @@
     </properties>
     
     <dependencies>
-        <!-- Java EE API -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>pathfinder-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- JCache -->
+
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Java EE API -->
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>

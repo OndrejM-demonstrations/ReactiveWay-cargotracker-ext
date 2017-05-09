@@ -1,0 +1,5 @@
+# default executor core pool size = 5 instead of default 1
+set resources.managed-executor-service.concurrent/__defaultManagedExecutorService.core-pool-size=2
+#set resources.managed-executor-service.concurrent/__defaultManagedExecutorService.maximum-pool-size=100
+#set resources.managed-executor-service.concurrent/__defaultManagedExecutorService.hung-after-seconds=50
+#set resources.managed-executor-service.concurrent/__defaultManagedExecutorService.thread-lifetime-seconds=10

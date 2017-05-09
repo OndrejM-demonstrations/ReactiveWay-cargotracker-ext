@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.cache.Cache;
+import javax.cache.CacheManager;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
@@ -30,11 +32,14 @@ public class GraphTraversalService {
     private static final long ONE_MIN_MS = 1000 * 60;
     private static final long ONE_DAY_MS = ONE_MIN_MS * 60 * 24;
 
-    Logger logger = Logger.getLogger(GraphTraversalService.class.getCanonicalName());
+    protected Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Inject
     @Outbound
     private Event<GraphTraversalResponse> responseEvent;
+    
+    @Inject
+    private CacheManager cacheManager;
 
     @GET
     @Path("/shortest-path")
@@ -50,19 +55,33 @@ public class GraphTraversalService {
 
         findShortestPath(originUnLocode, destinationUnLocode,
                 candidates::add,
-                () -> response.resume(new GenericEntity<List<TransitPath>>(candidates){}),
+                () -> response.resume(new GenericEntity<List<TransitPath>>(candidates) {
+                }),
                 e -> response.resume(e));
     }
-    
+
     public void findShortestPath(@Observes @Inbound GraphTraversalRequest request) {
-        String originUnLocode = request.getOrigin();
-        String destinationUnLocode = request.getDestination();
-        findShortestPath(originUnLocode, destinationUnLocode,
-                item -> responseEvent.fire(GraphTraversalResponse.newWithValue(item, request)),
-                () -> responseEvent.fire(GraphTraversalResponse.newCompleted(request)),
-                e -> responseEvent.fire(GraphTraversalResponse.newCompletedWithException(e, request)));
+
+        final Cache cache = getAtMostOnceDeliveryCache();
+        if (cache != null && cache.remove(request.getId())) {
+            logger.info("Received a computation request, id=" + request.getId());
+
+            String originUnLocode = request.getOrigin();
+            String destinationUnLocode = request.getDestination();
+            findShortestPath(originUnLocode, destinationUnLocode,
+                    item -> responseEvent.fire(GraphTraversalResponse.newWithValue(item, request)),
+                    () -> responseEvent.fire(GraphTraversalResponse.newCompleted(request)),
+                    e -> responseEvent.fire(GraphTraversalResponse.newCompletedWithException(e, request)));
+
+        } else {
+            logger.info("Ignoring computation request, somebody else is computing, id=" + request.getId());
+        }
     }
-    
+
+    private Cache<Long, String> getAtMostOnceDeliveryCache() {
+        return cacheManager.getCache("GraphTraversalRequest");
+    }
+
     public void findShortestPath(String originUnLocode,
             String destinationUnLocode, Consumer<TransitPath> onNewItem, Runnable onCompleted, Consumer<Throwable> onException) {
         Date date = nextDate(new Date());
@@ -106,7 +125,7 @@ public class GraphTraversalService {
                         lastLegFrom, destinationUnLocode, fromDate, toDate));
 
                 Thread.sleep(Integer.valueOf(System.getProperty("reactivejavaee.itemslowdown", "3000")));
-                
+
                 onNewItem.accept(new TransitPath(transitEdges));
             }
 
