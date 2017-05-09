@@ -54,6 +54,26 @@ The branch `12_load_balancing_01_jcache` introduces JCache API (JSR 107).
 
 JCache can be used for caching of results to optimize repetitive processing. But if the cache is distributed, it also provides distributed locks, which we will use to synchronize message observers so that at most one of them processes the message.
 
-## Deploying microservices
+### Run the microservices
+
+Deploy and run the main application in a usual way on Payara Server.
+
+Run the Pathfinder microservice with Payara Micro:
+
+`java -jar payara-micro.jar --deploy pathfinder.war --autobindhttp`
+
+Try if the route cargo page is working, check the logs of the main application and the Pathfinder service.
+
+Build a standalone executable JAR with the Pathfinder microservice:
+
+`java -jar payara-micro.jar --deploy pathfinder.war --autobindhttp --outputuberjar pathfinder-standalone.jar`
+
+Run a second instance of the Pathfinder microservice, now using the standalone JAR:
+
+`java -jar pathfinder-standalone.jar`
+
+Request the route cargo page in 2 or more different windows at the same time and observer that the requests are load-balanced to one or the other Pathfinder instance.
+
+## Deploying microservices with Docker
 
 In the third part, we will deploy the monolith and the microservice into connected docker containers, implement some microservice patterns and deploy to the Jelastic cloud.

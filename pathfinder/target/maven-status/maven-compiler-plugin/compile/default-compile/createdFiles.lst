@@ -1,0 +1,4 @@
+net/java/pathfinder/internal/RestApplication.class
+net/java/pathfinder/internal/GraphDao.class
+net/java/pathfinder/api/GraphTraversalService.class
+net/java/pathfinder/api/GraphTraversalService$1.class
