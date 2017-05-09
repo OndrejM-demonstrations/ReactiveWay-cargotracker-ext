@@ -16,10 +16,16 @@ See the instructions to download the recommended tools and setup your environmen
 
 In the first part, we will improve the monolithic application. The steps are described in the [ReactiveWay-cargotracker](https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker/blob/devoxx-uk-2017/README.adoc) repository.
 
-## Introduce a microservice
-In the second part, we will separate a module of the monolith into a sandalone microservice, running with Payara Micro.
+## Introduce reactive microservices architecture
 
-Branch `11_separate_microservice` in both repositories.
+In the second part, we will separate a module of the monolith into a standalone microservice, running with Payara Micro. We will then look at the ways how to extend the reactive concepts to the architecture of microservices, beyond a single monolith.
+
+The starting point is the branch `10_monolith_before_splitting`, which already contains the previous reacive improvements in the original monolithic application.
+
+
+### Introduce a microservice
+
+The branch `11_separate_microservice` in both repositories.
 
 2 new maven modules:
  - Pathfinder service (WAR) - a separate microservice providing GraphTraversalService service as both a REST resource and via Payara CDI event bus
@@ -34,6 +40,19 @@ The `--autobindhttp` argument to Payara Micro instructs the service to bind the 
 
 The port number is not important and can even vary. The monolith communicates with the service using the CDI even bus messages and doesn't use the REST endpoint. 
 
+### Decouple microservices
+
+In this step, the microservices share the API code. To enable that the service API can evolve without redeploying its clients, we need to avoid the shared code. 
+
+This is done in the branch `11_separate_microservice_02_decoupled_api` in both repositories.
+
+Since the API consists of serializable class, we can decouple the API by copying the API classes into the client so that they are still available in both services, but maitained separately. We need to ensure that the `serialVersionUID` remains equal and that the future contract changes are compatible with the standard serialization mechanism, or introduce a custom serialization.
+
+### Introduce JCache for caching and process synchronization
+
+The branch `12_load_balancing_01_jcache` introduces JCache API (JSR 107). 
+
+JCache can be used for caching of results to optimize repetitive processing. But if the cache is distributed, it also provides distributed locks, which we will use to synchronize message observers so that at most one of them processes the message.
 
 ## Deploying microservices
 
