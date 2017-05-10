@@ -80,8 +80,41 @@ In the third part, we will deploy the monolith and the microservice into connect
 
 ### Build Docker Image of Payara Server with additional configuration
 
-We need to enable Hazelcast in Payara Server, therefore we'll build a custom Payara Server image.
+We need to enable Hazelcast in Payara Server, therefore we'll build a custom Payara Server image. The instructions to use the stock payara/server-full image and its Dockerfile can be found in the [Docker Hub](https://hub.docker.com/r/payara/server-full/).
+
+Checkout the branch `13_deploy_to_docker_01_simple` in both repositories.
 
 Go into the `cargo-tracker/docker` directory and run the following command:
 
-`docker build -t payara/server-hazelcast .`
+`docker build -t reactivems/payara-server .`
+
+### Running the main application in Docker
+
+Leave the `13_deploy_to_docker_01_simple` branch checked out.
+
+Rebuild the cargo-tracker main application with `mvn install`.
+
+Run the application inside Docker with the following command, with PATH_TO_THE_GITHUB_REPO substituted by the path to parent folder of the cargo-tracker project:
+
+```
+docker run -p 8080:8080 -p 5901:5900 -v 'PATH_TO_THE_GITHUB_REPO/cargo-tracker/target/autodeploy':/opt/payara41/glassfish/domains/domain1/autodeploy reactivems/payara-server bin/asadmin start-domain -v
+ ```
+Test that the application is running at the URL: [localhost:8080/cargo-tracker](http://localhost:8080/cargo-tracker/)
+
+### Build Docker Image of Payara Micro with additional configuration
+
+Leave the `13_deploy_to_docker_01_simple` branch checked out.
+
+Go into the `pathfinder/docker` directory and run the following command:
+
+`docker build -t reactivems/payara-micro .`
+
+### Running the Pathfinder service in Docker
+
+Run the application inside Docker with the following command, with PATH_TO_THE_GITHUB_REPO substituted by the path to parent folder of the pathfinder project:
+
+```
+docker run -p 8081:8080  -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro java -jar /opt/payara/payara-micro.jar --deploy /opt/payara/deployments/pathfinder.war
+ ```
+
+Test that the service is running and exposes a REST resource at the URL: [localhost:8081/pathfinder/rest/graph-traversal/shortest-path?origin=CNHKG&destination=AUMEL](http://localhost:8081/pathfinder/rest/graph-traversal/shortest-path?origin=CNHKG&destination=AUMEL)
