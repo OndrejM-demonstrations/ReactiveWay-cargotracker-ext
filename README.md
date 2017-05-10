@@ -77,3 +77,11 @@ Request the route cargo page in 2 or more different windows at the same time and
 ## Deploying microservices with Docker
 
 In the third part, we will deploy the monolith and the microservice into connected docker containers, implement some microservice patterns and deploy to the Jelastic cloud.
+
+### Build Docker Image of Payara Server with additional configuration
+
+We need to enable Hazelcast in Payara Server, therefore we'll build a custom Payara Server image.
+
+Go into the `cargo-tracker/docker` directory and run the following command:
+
+`docker build -t payara/server-hazelcast .`
