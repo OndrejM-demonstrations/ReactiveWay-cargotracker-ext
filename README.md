@@ -97,17 +97,12 @@ Rebuild the cargo-tracker main application with `mvn install`.
 Run the application inside Docker with the following command, with PATH_TO_THE_GITHUB_REPO substituted by the path to parent folder of the cargo-tracker project:
 
 ```
-docker run -p 8080:8080 -p 5901:5900 -v 'PATH_TO_THE_GITHUB_REPO/cargo-tracker/target/autodeploy':/opt/payara41/glassfish/domains/domain1/autodeploy reactivems/payara-server bin/asadmin start-domain -v
+docker run -p 8080:8080 -v 'PATH_TO_THE_GITHUB_REPO/cargo-tracker/target/autodeploy':/opt/payara41/glassfish/domains/domain1/autodeploy reactivems/payara-server bin/asadmin start-domain -v
  ```
+
 Test that the application is running at the URL: [localhost:8080/cargo-tracker](http://localhost:8080/cargo-tracker/)
 
-### Build Docker Image of Payara Micro with additional configuration
-
-Leave the `13_deploy_to_docker_01_simple` branch checked out.
-
-Go into the `pathfinder/docker` directory and run the following command:
-
-`docker build -t reactivems/payara-micro .`
+If the application isn't running, try building the application again to deploy it.
 
 ### Running the Pathfinder service in Docker
 
@@ -118,3 +113,11 @@ docker run -p 8081:8080  -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/pay
  ```
 
 Test that the service is running and exposes a REST resource at the URL: [localhost:8081/pathfinder/rest/graph-traversal/shortest-path?origin=CNHKG&destination=AUMEL](http://localhost:8081/pathfinder/rest/graph-traversal/shortest-path?origin=CNHKG&destination=AUMEL)
+
+### Running multiple Pathfinder services in Docker
+
+Run additional services with the same docker command, but with modified port mapping. It's not necessary to map the HTTP port. Map the Hazelcast port to bigger ports (5902:
+
+```
+docker run -p 8081:8080  -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro java -jar /opt/payara/payara-micro.jar --deploy /opt/payara/deployments/pathfinder.war
+ ```
