@@ -17,7 +17,7 @@ The following should work. If not, follow the rest of this file to setup your en
  ** once server is started, the admin console should be accessible via the URL http://localhost:4848 in a browser.
  * Payara Micro JAR file `payara-micro.jar` version 4.1.1.171 or later is present on the filesystem, it's possible to run `java -jar payara-micro.jar`
  * optionally, you have an account with a cloud provided that supports running Docker containers
- ** the lecture will use Jelastic cloud - it's possible to get a https://jelastic.com/cloud-hosting-platform-for-developers[14-day trail account]
+ ** the lecture will use Jelastic cloud - it's possible to get a https://jelastic.com/cloud-hosting-platform-for-developers[14-day trial account]
 
 
 == List of all recommended tools
