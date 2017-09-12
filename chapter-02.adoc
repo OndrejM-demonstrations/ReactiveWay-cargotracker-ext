@@ -1,0 +1,21 @@
+== Running the Work Project
+
+To run the demo from the above branches, you need to install http://www.payara.fish/downloads[Payara Server version 4.1.1.171] or newer and a standalone Derby database, which is available either in the Payara Server distribution or in a JDK installation. 
+
+Deploy the application:
+
+1. Start Derby DB on localhost and the default port 1527
+ - in Netbeans, open *Services* View, **Databases**, right click on *Java DB* and select **Start Server** 
+2. Start Payara Server
+ - in Netbeans, open *Services* View, *Servers*, *Payara Server*, right click and select *Start* or *Start in debug mode*
+3. Deploy the application with context root `cargo-tracker`
+ - in Netbeans, right clikc on the *cargo-tracker* project and select either *Run* or *Debug*
+4. Verify that the application is running by openning the URL http://localhost:8080/cargo-tracker/ in the browser (should open automatically when the application is started from Netbeans)
+
+Then navigate to the "routing" page we focus on:
+
+1. Select *Administration interface*
+2. Select a record in the "Not routed" table
+3. The routing page opens with suggested routes
+
+If you have troubles running the application, make sure that the Derby database is running and restart the application.

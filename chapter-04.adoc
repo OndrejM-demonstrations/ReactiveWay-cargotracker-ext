@@ -1,0 +1,58 @@
+== Part 2: Introduce reactive microservices architecture
+
+In this part, we will separate a module of the monolith into a standalone microservice, running with Payara Micro. We will then look at the ways how to extend the reactive concepts to the architecture of microservices, beyond a single monolith.
+
+The starting point is the branch `10_monolith_before_splitting`, which already contains the previous reacive improvements in the original monolithic application.
+
+=== Introduce a microservice
+
+The branch `11_separate_microservice` in both repositories.
+
+2 new maven modules:
+
+ - Pathfinder service (WAR) - a separate microservice providing GraphTraversalService service as both a REST resource and via Payara CDI event bus
+ - Pathfinder API (JAR) - common code reused in both the monolithic application and the Pathfinder micro service
+
+=== Run the project
+
+ 1. run `mvn clean install` in the root of this repository (for the top-level maven module)
+ 2. deploy the monolithic cargo-tracker application to Payara Server as before
+ 3. run Pathfinder micro service with Payara Micro -- go to the directory `pathfinder/target` and execute: `java -jar /home/javaone/workspace/payara-micro.jar --autobindhttp --deploy pathfinder.war` (alternatively copy payara-micro.jar to the target directory or use the https://docs.payara.fish/documentation/ecosystem/maven-plugin.html[Payara Micro maven plugin])
+
+The `--autobindhttp` argument to Payara Micro instructs the service to bind the HTTP listener to an available port. Since the monolithic application already occupies the port 8080, therefore the Pathfinder service will probably bind to the port 8081. We can find out the port from the console output. We can check that the application is running with the following URL: http://localhost:8081/pathfinder/rest/graph-traversal/shortest-path?origin=CNHKG&destination=AUMEL
+
+The port number is not important and can even vary. The monolith communicates with the service using the CDI even bus messages and doesn't use the REST endpoint. 
+
+=== Decouple microservices
+
+In this step, the microservices share the API code. To enable that the service API can evolve without redeploying its clients, we need to avoid the shared code. 
+
+This is done in the branch `11_separate_microservice_02_decoupled_api` in both repositories.
+
+Since the API consists of serializable class, we can decouple the API by copying the API classes into the client so that they are still available in both services, but maitained separately. We need to ensure that the `serialVersionUID` remains equal and that the future contract changes are compatible with the standard serialization mechanism, or introduce a custom serialization.
+
+=== Introduce JCache for caching and process synchronization
+
+The branch `12_load_balancing_01_jcache` introduces JCache API (JSR 107). 
+
+JCache can be used for caching of results to optimize repetitive processing. But if the cache is distributed, it also provides distributed locks, which we will use to synchronize message observers so that at most one of them processes the message.
+
+=== Run the microservices
+
+Deploy and run the main application in a usual way on Payara Server.
+
+Run the Pathfinder microservice with Payara Micro:
+
+`java -jar payara-micro.jar --deploy pathfinder.war --autobindhttp`
+
+Try if the route cargo page is working, check the logs of the main application and the Pathfinder service.
+
+Build a standalone executable JAR with the Pathfinder microservice:
+
+`java -jar payara-micro.jar --deploy pathfinder.war --autobindhttp --outputuberjar pathfinder-standalone.jar`
+
+Run a second instance of the Pathfinder microservice, now using the standalone JAR:
+
+`java -jar pathfinder-standalone.jar`
+
+Request the route cargo page in 2 or more different windows at the same time and observer that the requests are load-balanced to one or the other Pathfinder instance.

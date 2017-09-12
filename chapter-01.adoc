@@ -1,0 +1,42 @@
+== Introduction
+
+In this session, presenters and attendees explore together how to migrate parts of an existing Java EE application step-by-step in order to decrease its response time, increase throughput, and make it more flexible and robust. The presentation shows you by example how to apply reactive design to a traditional codebase, split it into several microservices, and deploy them to a cloud environment. Finally it evaluates the performance and flexibility gains.
+
+=== Resources
+
+All the tools and resources you'll need are preinstalled in this virtual machine.
+
+In the directory `workspace` (`/home/javaone/workspace`), accessible from the desktop shortcut:
+ 
+ - WorkProject - directory with an initial project which we'll modify
+ - ExampleProject - an example how the project could end up after applyig all the steps of this lab
+ - payara-server - the Payara Server install location
+ - payara-micro.jar - Payara Micro executable
+
+Other tools we'll be using:
+
+ - Netbeans IDE, accessible from the desktop shortcut
+ - Docker Community Edition, accessible from the terminal with command `docker`
+ 
+Netbeans IDE also contains Payara Server plugin and Payara Server is already configured and ready to use.
+
+=== The Work Project
+
+The Work project in the WorkProject directory is an example Java EE application called Cargo Tracker. It's based on the original https://cargotracker.java.net/[cargo tracker]
+application (https://github.com/javaee/cargotracker[cargo tracker on github]). The description of the original application can be found in the readme.txt in the cargo-tracker directory.
+
+The initial application in the cargo-tracker directory is opened as a project in Netbeans IDE (the Projects View).
+
+In this project, we start with the original monolithic application, we focus one particular usecase 
+of searching for routes for delivering cargo and we improve its responsiveness using asynchronous approach in multiple steps.
+
+=== The Example Project
+
+This project is an example of how our Work project should finally look like.
+
+The project consists of 2 git repositories:
+
+ - https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker[ReactiveWay-cargotracker] -- updates to the original CargoTracker application
+ - https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker-ext[ReactiveWay-cargotracker extensions] -- additional modules required by the updated CargoTracker application, and information about all the changes and how to run the application
+ 
+The project's git repositories contain a branch for every step of this lab. 
