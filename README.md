@@ -15,8 +15,8 @@ The project consistes of 2 repositories:
 If you want to setup the the lab resources on your operating system:
  
 1. See the instructions to download the recommended tools and setup your environment in this [README](workshop-dependencies/README.adoc) file
-2. Download Netbeans IDE with preinstalled required plugins either from [this location (EU region)](https://s3-eu-west-1.amazonaws.com/holjavaone/Workspace/netbeans.zip) or 
-3. It's also a good idea to download the workspace from either [this location (EU region)](https://s3-eu-west-1.amazonaws.com/holjavaone/Workspace/workspace.zip) - the workspace includes template and working source code projects and Payara Server installations in one place, as they are preinstalled on the alternative virtual machine as described in the [Instructions for Virtual Machine](instructions-for-virtual-machine.adoc). But it's not necessary as these should be already installed by following the step on to setup your environment
+2. Download Netbeans IDE with preinstalled required plugins either from [this location (US region)](https://s3-us-west-1.amazonaws.com/holjavaoneus/Workspace/netbeans.zip) or [this location (EU region)](https://s3-eu-west-1.amazonaws.com/holjavaone/Workspace/netbeans.zip)
+3. It's also a good idea to download the workspace from either [this location (US region)](https://s3-us-west-1.amazonaws.com/holjavaoneus/Workspace/workspace.zip) or [this location (EU region)](https://s3-eu-west-1.amazonaws.com/holjavaone/Workspace/workspace.zip) - the workspace includes template and working source code projects and Payara Server installations in one place, as they are preinstalled on the alternative virtual machine as described in the [Instructions for Virtual Machine](instructions-for-virtual-machine.adoc). But it's not necessary as these should be already installed by following the step on to setup your environment
 
 If you want to run the lab inside a virtual machine in isolation to your operating system:
 
