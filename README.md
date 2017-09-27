@@ -29,7 +29,7 @@ Also check out [Lab instructions for Virtual Machine](instructions-for-virtual-m
 
 ## Improve the monolithic application
 
-In the first part, we will improve the monolithic application. The steps are described in the [ReactiveWay-cargotracker](https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker/blob/devoxx-uk-2017/README.adoc) repository.
+In the first part, we will improve the monolithic application. The steps are described in the [ReactiveWay-cargotracker](https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker/blob/javaone2017/README.adoc) repository.
 
 ## Introduce reactive microservices architecture
 
