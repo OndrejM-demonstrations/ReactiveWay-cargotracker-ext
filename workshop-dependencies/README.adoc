@@ -1,0 +1,71 @@
+= Dependency downloader
+
+This module describes how to downloads tools for the Hands-on Lab.
+
+== Configuration checklist
+
+The following should work in your lab environment. If not, follow the rest of this file to setup your environment.
+
+ * it's possible to execute `docker ps` command, output contains no errors and begins with `CONTAINER ID`
+ ** the version 17.03.1 or later of Docker-CE is recommended, although older versions may work as well
+ * the following commands can be run and finish (the commands download Payara docker images, it will take some time to finish those commands the first time because they donwload docker images that have't been downloaded yet):
+ ** `docker pull payara/server-full`
+ ** `docker pull payara/micro`
+ * it's possible to execute `mvn -v` (either from command line or from an IDE) - the version in the output on the first line is at least 3.3
+ * Payara Server version 4.1.1.171 or later is installed
+ ** it's possible to execute `bin/asadmin start-domain` or manage the server from an IDE
+ ** once server is started, the admin console should be accessible via the URL http://localhost:4848 in a browser.
+ * Payara Micro JAR file `payara-micro.jar` version 4.1.1.171 or later is present on the filesystem, it's possible to run `java -jar payara-micro.jar`
+ * optionally, you have an account with a cloud provided that supports running Docker containers
+ ** the lecture will use Jelastic cloud - it's possible to get a https://jelastic.com/cloud-hosting-platform-for-developers[14-day trail account]
+
+
+== List of all recommended tools
+
+The following tools need to be available on the system to able to follow the lab.
+
+ * a Java IDE (Netbeans will be used by the lecturer, but any other decent IDE should work fine)
+ * Docker Community Edition 
+ * Maven build tool version 3.3 or later 
+ * Payara Server and Payara Micro version 4.1.1.171 or later (download from http://www.payara.fish/downloads[www.payara.fish])
+ * standalone Derby DB server (included in any Payara Server installation)
+
+=== Install Docker Community Edition
+
+If not installed, download and install Docker from https://www.docker.com/community-edition[www.docker.com]
+
+=== Install Maven
+
+If not installed, either download and install from https://maven.apache.org[maven.apache.org], use it from your IDE if available there.
+
+=== Install tools downloaded by the downloader
+
+Some tools can be downloaded automatically using the downloader described below:
+ * Payara Server
+ * Payara Micro
+
+==== Download tools with the downloader
+
+To run the downloader, you need to use the https://maven.apache.org[Maven] build tool. If you don't have Maven 3.3+ installed already, you can download the latest version from its project page, or use the `mvnw` script instead of the `mvn` command to download Maven automatically.
+
+To download the dependencies, run one of the following commands:
+
+* `mvn install` (if you installed Maven and `mvn` command is available)
+* `mvnw.cmd install` (if on Windows and you want to download Maven automatically)
+* `./mvnw install` (if in a Unix shell and you want to download Maven automatically)
+
+All dependencies will be downloaded into the `resources` folder next to the pom.xml and this README file:
+ * `payara.zip` - a zipped distribution of Payara Server Full Profile
+ * `payara-micro.jar` - Payara Micro distribution
+
+==== Install Payara Server
+
+Unpack the folder `payara41` from `resources/payara.zip` to a location of your choice (e.g. /opt/payara41 on Linux or C:\payara41 on Widnows).
+Change the current directory to that location and make sure that the folder contains folders `bin`, `glassfish` and `javadb`. You should be able to start the server either from your IDE or by the following command executed from the root installation directory: 
+
+ * `bin/asadmin start-domain` (on Unix-based systems)
+ * `bin/asadmin.bat start-domain` (on Windows)
+
+==== Ensure Payara Micro is present
+
+Payara Micro JAR file should be in `resources/payara-micro.jar`. You should be able to run `java -jar payara-micro.jar` from command line.
