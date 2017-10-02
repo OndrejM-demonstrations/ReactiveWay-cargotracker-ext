@@ -41,8 +41,9 @@ If not installed, either download and install from https://maven.apache.org[mave
 === Install tools downloaded by the downloader
 
 Some tools can be downloaded automatically using the downloader described below:
- * Payara Server
- * Payara Micro
+
+* Payara Server
+* Payara Micro
 
 ==== Download tools with the downloader
 
@@ -55,8 +56,9 @@ To download the dependencies, run one of the following commands:
 * `./mvnw install` (if in a Unix shell and you want to download Maven automatically)
 
 All dependencies will be downloaded into the `resources` folder next to the pom.xml and this README file:
- * `payara.zip` - a zipped distribution of Payara Server Full Profile
- * `payara-micro.jar` - Payara Micro distribution
+
+* `payara.zip` - a zipped distribution of Payara Server Full Profile
+* `payara-micro.jar` - Payara Micro distribution
 
 ==== Install Payara Server
 
