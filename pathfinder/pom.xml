@@ -16,7 +16,9 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.payara.micro>5.181</version.payara.micro>
+        <version.payara>5.184</version.payara>
+        <version.payara.micro>${version.payara}</version.payara.micro>
+        <version.payara.api>${version.payara}</version.payara.api>
     </properties>
     
     <dependencies>
@@ -38,7 +40,7 @@
         <dependency>
             <groupId>fish.payara.api</groupId>
             <artifactId>payara-api</artifactId>
-            <version>${version.payara.micro}</version>
+            <version>${version.payara.api}</version>
         </dependency>
         
     </dependencies>
@@ -87,7 +89,7 @@
                 <plugin>
                     <groupId>fish.payara.maven.plugins</groupId>
                     <artifactId>payara-micro-maven-plugin</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.0.3</version>
                     <executions>
                         <execution>
                             <id>package-uber-jar</id>
@@ -99,11 +101,10 @@
                                 <commandLineOptions>
                                     <option>
                                         <key>--autoBindHttp</key>
-                                        <value>true</value>
                                     </option>
                                     <option>
                                         <key>--clustermode</key>
-                                        <value>domain</value>
+                                        <value>domain:localhost:4848</value>
                                     </option>
                                     <option>
                                         <key>--deploy</key>
@@ -112,6 +113,27 @@
                                     <option>
                                         <key>--outputuberjar</key>
                                         <value>${project.build.directory}/pathfinder-uber.jar</value>
+                                    </option>
+                                </commandLineOptions>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-cli</id>
+                            <goals>
+                                <goal>start</goal>
+                            </goals>
+                            <configuration>
+                                <commandLineOptions>
+                                    <option>
+                                        <key>--autoBindHttp</key>
+                                    </option>
+                                    <option>
+                                        <key>--clustermode</key>
+                                        <value>domain:localhost:4848</value>
+                                    </option>
+                                    <option>
+                                        <key>--deploy</key>
+                                        <value>${project.build.directory}/${project.build.finalName}</value>
                                     </option>
                                 </commandLineOptions>
                             </configuration>
