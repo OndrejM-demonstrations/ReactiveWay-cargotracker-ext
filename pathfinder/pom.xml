@@ -16,7 +16,9 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.payara.micro>5.181</version.payara.micro>
+        <version.payara>5.184</version.payara>
+        <version.payara.micro>${version.payara}</version.payara.micro>
+        <version.payara.api>${version.payara}</version.payara.api>
     </properties>
     
     <dependencies>
@@ -42,13 +44,21 @@
             <version>8.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <scope>provided</scope>
+            <type>pom</type>
+            <version>2.0.1</version>
+        </dependency>
         
         <!-- Payara specific dependencies -->
 
         <dependency>
             <groupId>fish.payara.api</groupId>
             <artifactId>payara-api</artifactId>
-            <version>${version.payara.micro}</version>
+            <version>${version.payara.api}</version>
+            <scope>provided</scope>
         </dependency>
         
     </dependencies>
@@ -93,11 +103,11 @@
             </plugin>
         </plugins>
         <pluginManagement>
-                <plugins>
-                    <plugin>
+            <plugins>
+                <plugin>
                     <groupId>fish.payara.maven.plugins</groupId>
                     <artifactId>payara-micro-maven-plugin</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.0.3</version>
                     <executions>
                         <execution>
                             <id>package-uber-jar</id>
@@ -109,11 +119,10 @@
                                 <commandLineOptions>
                                     <option>
                                         <key>--autoBindHttp</key>
-                                        <value>true</value>
                                     </option>
                                     <option>
                                         <key>--clustermode</key>
-                                        <value>domain</value>
+                                        <value>domain:localhost:4900</value>
                                     </option>
                                     <option>
                                         <key>--deploy</key>
@@ -122,6 +131,27 @@
                                     <option>
                                         <key>--outputuberjar</key>
                                         <value>${project.build.directory}/pathfinder-uber.jar</value>
+                                    </option>
+                                </commandLineOptions>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-cli</id>
+                            <goals>
+                                <goal>start</goal>
+                            </goals>
+                            <configuration>
+                                <commandLineOptions>
+                                    <option>
+                                        <key>--autoBindHttp</key>
+                                    </option>
+                                    <option>
+                                        <key>--clustermode</key>
+                                        <value>domain:localhost:4900</value>
+                                    </option>
+                                    <option>
+                                        <key>--deploy</key>
+                                        <value>${project.build.directory}/${project.build.finalName}</value>
                                     </option>
                                 </commandLineOptions>
                             </configuration>
@@ -137,34 +167,34 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <version>3.0.0</version>
-                        <executions>
-                            <execution>
-                                <id>copy</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>fish.payara.extras</groupId>
-                                            <artifactId>payara-micro</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <executions>
+                        <execution>
+                            <id>copy</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>copy</goal>
+                            </goals>
+                            <configuration>
+                                <artifactItems>
+                                    <artifactItem>
+                                        <groupId>fish.payara.extras</groupId>
+                                        <artifactId>payara-micro</artifactId>
                                         <version>5.181</version>
-                                            <type>jar</type>
-                                            <overWrite>false</overWrite>
-                                            <outputDirectory>${project.build.directory}</outputDirectory>
-                                            <destFileName>payara-micro.jar</destFileName>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
+                                        <type>jar</type>
+                                        <overWrite>false</overWrite>
+                                        <outputDirectory>${project.build.directory}</outputDirectory>
+                                        <destFileName>payara-micro.jar</destFileName>
+                                    </artifactItem>
+                                </artifactItems>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
         </pluginManagement>
-            </build>
-
+    </build>
+    
 </project>
