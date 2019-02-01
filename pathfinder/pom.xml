@@ -34,6 +34,13 @@
             <version>8.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <scope>provided</scope>
+            <type>pom</type>
+            <version>2.0.1</version>
+        </dependency>
         
         <!-- Payara specific dependencies -->
 
@@ -41,6 +48,7 @@
             <groupId>fish.payara.api</groupId>
             <artifactId>payara-api</artifactId>
             <version>${version.payara.api}</version>
+            <scope>provided</scope>
         </dependency>
         
     </dependencies>
@@ -104,7 +112,7 @@
                                     </option>
                                     <option>
                                         <key>--clustermode</key>
-                                        <value>domain:localhost:4848</value>
+                                        <value>domain:localhost:4900</value>
                                     </option>
                                     <option>
                                         <key>--deploy</key>
@@ -129,7 +137,7 @@
                                     </option>
                                     <option>
                                         <key>--clustermode</key>
-                                        <value>domain:localhost:4848</value>
+                                        <value>domain:localhost:4900</value>
                                     </option>
                                     <option>
                                         <key>--deploy</key>

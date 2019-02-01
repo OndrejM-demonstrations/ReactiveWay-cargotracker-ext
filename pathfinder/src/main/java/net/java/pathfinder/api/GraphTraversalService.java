@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import net.java.pathfinder.api.reactive.GraphTraversalRequest;
 import net.java.pathfinder.api.reactive.GraphTraversalResponse;
 import net.java.pathfinder.internal.GraphDao;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @Stateless
 @Path("/graph-traversal")
@@ -29,6 +30,10 @@ public class GraphTraversalService {
     @Inject
     @Outbound(loopBack = true)
     private Event<GraphTraversalResponse> responseEvent;
+    
+    @Inject
+    @ConfigProperty(name = "reactivejavaee.slowfactor", defaultValue = "0")
+    int configSlowFactor;
 
     public void findShortestPath(@Observes @Inbound GraphTraversalRequest request) {
         Date date = nextDate(new Date());
@@ -75,7 +80,7 @@ public class GraphTraversalService {
                         dao.getVoyageNumber(lastLegFrom, destinationUnLocode),
                         lastLegFrom, destinationUnLocode, fromDate, toDate));
 
-                Thread.sleep(Integer.valueOf(System.getProperty("reactivejavaee.slowfactor", "0")) * 200);
+                Thread.sleep(configSlowFactor * 200);
                 
                 responseEvent.fire(GraphTraversalResponse.newWithValue(new TransitPath(transitEdges), request));
             }
