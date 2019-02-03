@@ -16,6 +16,9 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <version.payara>5.184</version.payara>
+        <version.payara.micro>${version.payara}</version.payara.micro>
+        <version.payara.api>${version.payara}</version.payara.api>
     </properties>
     
     <dependencies>
@@ -38,8 +41,15 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
+            <version>8.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <scope>provided</scope>
+            <type>pom</type>
+            <version>2.0.1</version>
         </dependency>
         
         <!-- Payara specific dependencies -->
@@ -47,7 +57,8 @@
         <dependency>
             <groupId>fish.payara.api</groupId>
             <artifactId>payara-api</artifactId>
-            <version>4.1.1.171.1</version>
+            <version>${version.payara.api}</version>
+            <scope>provided</scope>
         </dependency>
         
     </dependencies>
@@ -72,44 +83,159 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>fish.payara.maven.plugins</groupId>
+                <artifactId>payara-micro-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>package-uber-jar</id>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>dockerBuild</id>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>fish.payara.maven.plugins</groupId>
+                    <artifactId>payara-micro-maven-plugin</artifactId>
+                    <version>1.0.3</version>
+                    <executions>
+                        <execution>
+                            <id>package-uber-jar</id>
+                            <goals>
+                                <goal>start</goal>
+                            </goals>
+                            <phase>package</phase>
+                            <configuration>
+                                <commandLineOptions>
+                                    <option>
+                                        <key>--autoBindHttp</key>
+                                    </option>
+                                    <option>
+                                        <key>--clustermode</key>
+                                        <value>domain:localhost:4900</value>
+                                    </option>
+                                    <option>
+                                        <key>--deploy</key>
+                                        <value>${project.build.directory}/${project.build.finalName}.war</value>
+                                    </option>
+                                    <option>
+                                        <key>--outputuberjar</key>
+                                        <value>${project.build.directory}/pathfinder-uber.jar</value>
+                                    </option>
+                                </commandLineOptions>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-cli</id>
+                            <goals>
+                                <goal>start</goal>
+                            </goals>
+                            <configuration>
+                                <commandLineOptions>
+                                    <option>
+                                        <key>--autoBindHttp</key>
+                                    </option>
+                                    <option>
+                                        <key>--clustermode</key>
+                                        <value>domain:localhost:4900</value>
+                                    </option>
+                                    <option>
+                                        <key>--deploy</key>
+                                        <value>${project.build.directory}/${project.build.finalName}</value>
+                                    </option>
+                                </commandLineOptions>
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <payaraVersion>${version.payara.micro}</payaraVersion>
+                        <artifactItem>
+                            <groupId>fish.payara.extras</groupId>
+                            <artifactId>payara-micro</artifactId>
+                            <version>${version.payara.micro}</version>
+                        </artifactItem>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <executions>
+                        <execution>
+                            <id>copy</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>copy</goal>
+                            </goals>
+                            <configuration>
+                                <artifactItems>
+                                    <artifactItem>
+                                        <groupId>fish.payara.extras</groupId>
+                                        <artifactId>payara-micro</artifactId>
+                                        <version>${version.payara.micro}</version>
+                                        <type>jar</type>
+                                        <overWrite>false</overWrite>
+                                        <outputDirectory>${project.build.directory}</outputDirectory>
+                                        <destFileName>payara-micro.jar</destFileName>
+                                    </artifactItem>
+                                </artifactItems>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <version>1.0.0</version>
+                    <executions>
+                        <execution>
+                            <id>dockerBuild</id>
+                            <goals>
+                                <goal>dockerBuild</goal>
+                            </goals>
+                            <phase>package</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <from>
+                            <image>registry.hub.docker.com/payara/micro</image>
+                        </from>
+                        <to>
+                            <image>cargotracker/pathfinder</image>
+                        </to>
+                        <container>
+                            <appRoot>/opt/payara/deployments/ROOT.war</appRoot>
+                            <entrypoint>INHERIT</entrypoint>
+                            <args>
+                                <arg>--deploy</arg>
+                                <arg>/opt/payara/deployments/ROOT.war</arg>
+                                <arg>--clustermode</arg>
+                                <arg>domain:monolith:4900</arg>
+                            </args>
+                        </container>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
     
-    <profiles>
-        <profile>
-            <id>copymicro</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <version>3.0.0</version>
-                        <executions>
-                            <execution>
-                                <id>copy</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>fish.payara.extras</groupId>
-                                            <artifactId>payara-micro</artifactId>
-                                            <version>4.1.1.171.1</version>
-                                            <type>jar</type>
-                                            <overWrite>false</overWrite>
-                                            <outputDirectory>${project.build.directory}</outputDirectory>
-                                            <destFileName>payara-micro.jar</destFileName>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 </project>
