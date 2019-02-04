@@ -248,7 +248,7 @@
                                 <arg>--deploy</arg>
                                 <arg>/opt/payara/deployments/ROOT.war</arg>
                                 <arg>--clustermode</arg>
-                                <arg>domain:monolith:4900</arg>
+                                <arg>dns:monolith:4900</arg>
                             </args>
                         </container>
                     </configuration>

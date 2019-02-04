@@ -11,8 +11,6 @@ services:
       - cargotracker
   pathfinder:
     image: cargotracker/pathfinder
-    depends_on:
-      - monolith
     deploy:
       replicas: 1
       restart_policy:
