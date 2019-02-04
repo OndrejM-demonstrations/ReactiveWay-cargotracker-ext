@@ -213,18 +213,37 @@
                                 <goal>dockerBuild</goal>
                             </goals>
                             <phase>package</phase>
+                            <configuration>
+                                <to>
+                                    <image>cargotracker/pathfinder</image>
+                                </to>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-cli</id>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                            <configuration>
+                                <to>
+                                    <image>registry.hub.docker.com/cargotracker/pathfinder</image>
+                                </to>
+                            </configuration>
                         </execution>
                     </executions>
                     <configuration>
                         <from>
                             <image>registry.hub.docker.com/payara/micro</image>
                         </from>
-                        <to>
-                            <image>cargotracker/pathfinder</image>
-                        </to>
                         <container>
                             <appRoot>/opt/payara/deployments/ROOT.war</appRoot>
-                            <entrypoint>INHERIT</entrypoint>
+                            <entrypoint>
+                                <entrypoint>java</entrypoint>
+                                <entrypoint>-Dhazelcast.merge.first.run.delay.seconds=5</entrypoint>
+                                <entrypoint>-Dhazelcast.merge.next.run.delay.seconds=5</entrypoint>
+                                <entrypoint>-jar</entrypoint>
+                                <entrypoint>payara-micro.jar</entrypoint>
+                            </entrypoint>
                             <args>
                                 <arg>--deploy</arg>
                                 <arg>/opt/payara/deployments/ROOT.war</arg>
