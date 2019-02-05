@@ -8,3 +8,4 @@ The project consistes of 2 repositories:
  - [ReactiveWay-cargotracker](https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker) - updates to the original CargoTracker application
  - [this repository](https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker-ext) - additional modules required by the updated CargoTracker application, and information about all the changes and how to run the application
  
+Instructions for workshop are in a separate repository: https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker-instructions
